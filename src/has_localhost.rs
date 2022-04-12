@@ -6,13 +6,13 @@ pub(crate) trait HasLocalhost {
 
 impl HasLocalhost for Ipv4Addr {
     fn has_localhost(&self) -> bool {
-        self.to_string().contains("127.0.0.1")
+        Ipv4Addr::new(127, 0, 0, 1).eq(self)
     }
 }
 
 impl HasLocalhost for Ipv6Addr {
     fn has_localhost(&self) -> bool {
-        self.to_string().contains("::1")
+        Ipv6Addr::new(0, 0, 0, 0, 0, 0, 0, 1).eq(self)
     }
 }
 
