@@ -18,10 +18,7 @@ async fn spawn_server() {
         let make_svc = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
         let server = Server::bind(&addr).serve(make_svc);
 
-        match server.await {
-            Ok(_) => println!("Server established"),
-            Err(_) => println!("Address already in use, use the prev one")
-        }
+        server.await.unwrap();
     });
 }
 
