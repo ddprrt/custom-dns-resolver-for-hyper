@@ -15,11 +15,13 @@ async fn handle(_: Request<Body>) -> Result<Response<Body>, Infallible> {
 async fn spawn_server() {
     tokio::spawn(async {
         let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
-
         let make_svc = make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
-
         let server = Server::bind(&addr).serve(make_svc);
-        server.await.unwrap();
+
+        match server.await {
+            Ok(_) => println!("Server established"),
+            Err(_) => println!("Address already in use, use the prev one")
+        }
     });
 }
 
