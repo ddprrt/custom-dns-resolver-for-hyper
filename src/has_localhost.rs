@@ -6,7 +6,7 @@ pub(crate) trait HasLocalhost {
 
 impl HasLocalhost for Ipv4Addr {
     fn has_localhost(&self) -> bool {
-        Ipv4Addr::new(127, 0, 0, 1).eq(self)
+        Ipv4Addr::new(127, 0, 0, 1).eq(self) || Ipv4Addr::new(0, 0, 0, 0).eq(self)
     }
 }
 
