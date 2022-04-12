@@ -1,16 +1,16 @@
 mod has_localhost;
-mod my_resolver;
+mod block_localhost_resolver;
 
 use hyper::client::HttpConnector;
 use hyper::http::Request;
 
-use crate::my_resolver::MyResolver;
+use crate::block_localhost_resolver::BlockLocalhostResolver;
 
 use hyper::{Body, Client};
 
 #[tokio::main]
 async fn main() {
-    let connector = HttpConnector::new_with_resolver(MyResolver::default());
+    let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
 
     println!(">>> Accessing localtest.me at port 8080. Make sure your local server runs");
     let request = Request::get("http://localtest.me:8080")
@@ -43,7 +43,7 @@ async fn main() {
 
 #[tokio::test]
 async fn test_localtest() {
-    let connector = HttpConnector::new_with_resolver(MyResolver::default());
+    let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
     let request = Request::get("http://localtest.me:8080")
         .body(Body::empty())
         .unwrap();
@@ -54,7 +54,7 @@ async fn test_localtest() {
 
 #[tokio::test]
 async fn test_localhost() {
-    let connector = HttpConnector::new_with_resolver(MyResolver::default());
+    let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
     let request = Request::get("http://localhost:8080")
         .body(Body::empty())
         .unwrap();
@@ -65,7 +65,7 @@ async fn test_localhost() {
 
 #[tokio::test]
 async fn test_proper_url() {
-    let connector = HttpConnector::new_with_resolver(MyResolver::default());
+    let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
     let request = Request::get("http://fettblog.eu")
         .body(Body::empty())
         .unwrap();

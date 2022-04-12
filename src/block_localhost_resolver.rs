@@ -14,23 +14,23 @@ use std::net::ToSocketAddrs;
 use crate::has_localhost::HasLocalhost;
 
 #[derive(Clone)]
-pub struct MyResolver {
+pub struct BlockLocalhostResolver {
     inner: GaiResolver,
 }
 
-impl MyResolver {
+impl BlockLocalhostResolver {
     fn new(inner: GaiResolver) -> Self {
         Self { inner }
     }
 }
 
-impl Default for MyResolver {
+impl Default for BlockLocalhostResolver {
     fn default() -> Self {
         Self::new(GaiResolver::new())
     }
 }
 
-impl Service<Name> for MyResolver {
+impl Service<Name> for BlockLocalhostResolver {
     type Response = GaiAddrs;
     type Error = io::Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send>>;
