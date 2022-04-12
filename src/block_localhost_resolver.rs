@@ -46,7 +46,7 @@ impl Service<Name> for BlockLocalhostResolver {
         let addr = req.as_str();
         let addr = (addr, 0).to_socket_addrs();
 
-        if let Ok(_) = addr.map(|mut el| el.has_localhost()) {
+        if let Ok(true) = addr.map(|mut el| el.has_localhost()) {
             return Box::pin(async {
                 let err = io::Error::from(ErrorKind::Other);
                 Err(err)
