@@ -11,7 +11,7 @@ use hyper::{
 };
 use std::net::ToSocketAddrs;
 
-use crate::has_localhost::HasLocalhost;
+use crate::has_localhost::{HasLocalhost};
 
 #[derive(Clone)]
 pub struct MyResolver {
@@ -44,15 +44,13 @@ impl Service<Name> for MyResolver {
 
     fn call(&mut self, req: Name) -> Self::Future {
         let addr = req.as_str();
-        let addr = (addr, 0).to_socket_addrs();
+        let addr = (addr, 0).to_socket_addrs();     
 
-        if let Ok(mut addr) = addr {
-            if addr.any(|res| res.has_localhost()) {
-                return Box::pin(async {
-                    let err = io::Error::from(ErrorKind::Other);
-                    Err(err)
-                });
-            }
+        if let Ok(_) = addr.map(|mut el| el.has_localhost()) {
+            return Box::pin(async {
+                let err = io::Error::from(ErrorKind::Other);
+                Err(err)
+            });
         }
 
         let ft = self.inner.call(req);
