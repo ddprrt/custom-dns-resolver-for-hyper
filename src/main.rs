@@ -1,5 +1,5 @@
-mod has_localhost;
 mod block_localhost_resolver;
+mod has_localhost;
 
 use hyper::client::HttpConnector;
 use hyper::http::Request;
@@ -39,37 +39,4 @@ async fn main() {
         Ok(res) => println!("Allowed to access {:?}", res),
         Err(err) => println!("Seems like you are calling localhost {:?}", err),
     }
-}
-
-#[tokio::test]
-async fn test_localtest() {
-    let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
-    let request = Request::get("http://localtest.me:8080")
-        .body(Body::empty())
-        .unwrap();
-    let tx = Client::builder().build::<_, Body>(connector);
-    let result = tx.request(request).await;
-    assert_eq!(result.is_err(), true);
-}
-
-#[tokio::test]
-async fn test_localhost() {
-    let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
-    let request = Request::get("http://localhost:8080")
-        .body(Body::empty())
-        .unwrap();
-    let tx = Client::builder().build::<_, Body>(connector);
-    let result = tx.request(request).await;
-    assert_eq!(result.is_err(), true);
-}
-
-#[tokio::test]
-async fn test_proper_url() {
-    let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
-    let request = Request::get("http://fettblog.eu")
-        .body(Body::empty())
-        .unwrap();
-    let tx = Client::builder().build::<_, Body>(connector);
-    let result = tx.request(request).await;
-    assert_eq!(result.is_err(), false);
 }
