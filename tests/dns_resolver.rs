@@ -6,6 +6,8 @@ use hyper::{
     Body, Client, Request, Response, Server,
 };
 
+use hyper_tls::HttpsConnector;
+
 use http_resolve::BlockLocalhostResolver;
 
 async fn handle(_: Request<Body>) -> Result<Response<Body>, Infallible> {
@@ -71,4 +73,44 @@ async fn test_proper_url() {
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
     assert_eq!(result.is_err(), false);
+}
+
+
+#[tokio::test]
+async fn test_proper_url_https() {
+    let mut connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
+    connector.enforce_http(false);
+    let connector = HttpsConnector::new_with_connector(connector);
+    let request = Request::get("https://fettblog.eu")
+        .body(Body::empty())
+        .unwrap();
+    let tx = Client::builder().build::<_, Body>(connector);
+    let result = tx.request(request).await;
+    assert_eq!(result.is_err(), false);
+}
+
+
+#[tokio::test]
+async fn test_localtest_https() {
+    spawn_server(8080).await;
+    let mut connector = HttpConnector::new();
+    connector.enforce_http(false);
+    let connector = HttpsConnector::new_with_connector(connector);
+
+    let request = Request::get("http://localtest.me:8080")
+        .body(Body::empty())
+        .unwrap();
+    let tx = Client::builder().build::<_, Body>(connector);
+    let result = tx.request(request).await;
+    assert_eq!(result.is_err(), false);
+
+    let mut connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
+    connector.enforce_http(false);
+    let connector = HttpsConnector::new_with_connector(connector);
+    let request = Request::get("http://localtest.me:8080")
+        .body(Body::empty())
+        .unwrap();
+    let tx = Client::builder().build::<_, Body>(connector);
+    let result = tx.request(request).await;
+    assert_eq!(result.is_err(), true);
 }

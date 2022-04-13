@@ -1,8 +1,9 @@
 mod block_localhost_resolver;
 mod has_localhost;
 
-use hyper::client::HttpConnector;
+use hyper::client::connect::HttpConnector;
 use hyper::http::Request;
+use hyper_tls::{HttpsConnector};
 
 use crate::block_localhost_resolver::BlockLocalhostResolver;
 
@@ -36,6 +37,20 @@ async fn main() {
         .body(Body::empty())
         .unwrap();
     match tx.request(request).await {
+        Ok(res) => println!("Allowed to access {:?}", res),
+        Err(err) => println!("Seems like you are calling localhost {:?}", err),
+    }
+
+    let mut connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
+    connector.enforce_http(false);
+    let connector = HttpsConnector::new_with_connector(connector);
+
+    println!("");
+    println!("------ HTTPS -----");
+    println!("");
+    
+    let tx = Client::builder().build::<_, Body>(connector);
+    match tx.get("https://fettblog.eu".parse().unwrap()).await {
         Ok(res) => println!("Allowed to access {:?}", res),
         Err(err) => println!("Seems like you are calling localhost {:?}", err),
     }
