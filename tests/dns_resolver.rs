@@ -91,7 +91,7 @@ async fn test_proper_url_https() {
 
 
 #[tokio::test]
-async fn test_localtest_https() {
+async fn test_localtest_https_connector() {
     spawn_server(8080).await;
     let mut connector = HttpConnector::new();
     connector.enforce_http(false);
