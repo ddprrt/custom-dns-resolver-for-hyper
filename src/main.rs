@@ -3,7 +3,7 @@ mod has_localhost;
 
 use hyper::client::connect::HttpConnector;
 use hyper::http::Request;
-use hyper_tls::{HttpsConnector};
+use hyper_tls::HttpsConnector;
 
 use crate::block_localhost_resolver::BlockLocalhostResolver;
 
@@ -48,7 +48,7 @@ async fn main() {
     println!("");
     println!("------ HTTPS -----");
     println!("");
-    
+
     let tx = Client::builder().build::<_, Body>(connector);
     match tx.get("https://fettblog.eu".parse().unwrap()).await {
         Ok(res) => println!("Allowed to access {:?}", res),

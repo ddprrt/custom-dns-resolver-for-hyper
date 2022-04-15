@@ -75,7 +75,6 @@ async fn test_proper_url() {
     assert_eq!(result.is_err(), false);
 }
 
-
 #[tokio::test]
 async fn test_proper_url_https() {
     let mut connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
@@ -88,7 +87,6 @@ async fn test_proper_url_https() {
     let result = tx.request(request).await;
     assert_eq!(result.is_err(), false);
 }
-
 
 #[tokio::test]
 async fn test_localtest_https_connector() {
