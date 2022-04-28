@@ -33,7 +33,7 @@ async fn test_localtest() {
         .unwrap();
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
-    assert_eq!(result.is_err(), false);
+    assert!(result.is_ok());
 
     let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
     let request = Request::get("http://localtest.me:8080")
@@ -41,7 +41,7 @@ async fn test_localtest() {
         .unwrap();
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
-    assert_eq!(result.is_err(), true);
+    assert!(result.is_err());
 }
 
 #[tokio::test]
@@ -53,7 +53,7 @@ async fn test_localhost() {
         .unwrap();
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
-    assert_eq!(result.is_err(), false);
+    assert!(result.is_ok());
 
     let connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
     let request = Request::get("http://localhost:8080")
@@ -61,7 +61,7 @@ async fn test_localhost() {
         .unwrap();
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
-    assert_eq!(result.is_err(), true);
+    assert!(result.is_err());
 }
 
 #[tokio::test]
@@ -72,7 +72,7 @@ async fn test_proper_url() {
         .unwrap();
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
-    assert_eq!(result.is_err(), false);
+    assert!(result.is_ok());
 }
 
 #[tokio::test]
@@ -85,7 +85,7 @@ async fn test_proper_url_https() {
         .unwrap();
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
-    assert_eq!(result.is_err(), false);
+    assert!(result.is_ok());
 }
 
 #[tokio::test]
@@ -100,7 +100,7 @@ async fn test_localtest_https_connector() {
         .unwrap();
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
-    assert_eq!(result.is_err(), false);
+    assert!(result.is_ok());
 
     let mut connector = HttpConnector::new_with_resolver(BlockLocalhostResolver::default());
     connector.enforce_http(false);
@@ -110,5 +110,5 @@ async fn test_localtest_https_connector() {
         .unwrap();
     let tx = Client::builder().build::<_, Body>(connector);
     let result = tx.request(request).await;
-    assert_eq!(result.is_err(), true);
+    assert!(result.is_err());
 }

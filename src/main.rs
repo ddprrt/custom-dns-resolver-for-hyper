@@ -45,9 +45,9 @@ async fn main() {
     connector.enforce_http(false);
     let connector = HttpsConnector::new_with_connector(connector);
 
-    println!("");
+    println!();
     println!("------ HTTPS -----");
-    println!("");
+    println!();
 
     let tx = Client::builder().build::<_, Body>(connector);
     match tx.get("https://fettblog.eu".parse().unwrap()).await {
